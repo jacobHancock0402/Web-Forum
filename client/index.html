@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Forum</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+  li {
+    list-style-type: none;
+  }
+</style>
+<script type='module' src=script.js></script>
+</head>
+
+
+<body>
+    <div class='h-25'>
+  <h1> Basketball Forum </h1>
+  <h2 id="userNameArea"><i class='bi bi-person-fill'></i></h2>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav col-lg-12">
+            <li class="nav-item-active col"><button id="createPost" class='btn btn-primary'><i class='bi bi-plus-circle'></i>   Create a Post</button></li>
+            <li class="nav-item-active col"><button class='btn btn-primary' id="viewPosts"><i class='bi bi-view-list'></i> View Posts</button></li>
+            <li class="nav-item-active col"><button class='btn btn-primary' id="login"><i class='bi bi-box-arrow-right'></i> Login</button></li>
+        </ul>
+    </nav>
+    </div>
+    <div class='h-75' id="mainDiv">
+    </div>
+</body>

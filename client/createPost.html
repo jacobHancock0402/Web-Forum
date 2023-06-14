@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post Page></title>
+</head>
+
+<form class='p-2 h-75' action='http://127.0.0.1:8090/posts/create' method='POST' id="postCreateForm">
+	<div class='row justify-content-center align-items-center'>
+		<input class='w-50 h-25 p-2' placeholder='Title' id='createPostTitle'>
+	</div>
+	<div class='row justify-content-center align-items-center p-2'>
+		<textarea class="longInput w-50" rows="10" id="createPostBody" placeholder="Body"></textarea>
+	</div>
+	<div class='row justify-content-center align-items-center p-2'>
+		<input type='submit' value='Submit'>
+	</div>
+</form>
+<!-- <button class='btn btn-success'> Submit</button> -->
