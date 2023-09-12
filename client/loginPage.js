@@ -4,7 +4,8 @@ export default function loginPage () {
         let response = await fetch('http://127.0.0.1:8090/loginPage');
         response = await response.text();
         mainDiv.innerHTML = response;
-        document.getElementById('loginSubmit').addEventListener('submit', async () => {
+        document.getElementById('loginSubmit').addEventListener('click', async () => {
+            console.log("bdhfdjfdsjfkadjf")
         const username = document.getElementById('loginUsername').value;
         event.preventDefault();
         let response = await fetch('http://127.0.0.1:8090/login?username=' + username);
@@ -18,7 +19,7 @@ export default function loginPage () {
         });
         document.getElementById('createNewUser').addEventListener('click', async () => {
             const username = document.getElementById('loginUsername').value;
-            const response = await fetch('http://127.0.0.1:8090/users/create',
+            let response = await fetch('http://127.0.0.1:8090/users/create',
             {
                 method: 'POST',
                 body: JSON.stringify(
@@ -27,9 +28,13 @@ export default function loginPage () {
                 }),
                 headers: { 'Content-Type': 'application/json' }
             });
-            if (response.ok) {
+            response = await response.text();
+            if (response == "OK") {
                 alert('User Created. You are now logged in as ' + username);
                 userNameArea.innerHTML = "<i class='bi bi-person-fill'></i> " + username;
+            }
+            else {
+                alert('This username is already in use. Please try another')
             }
         });
     });

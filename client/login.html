@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page></title>
 </head>
-
-<form class='p-2 h-75' id="loginSubmit">
-	<div class='row h-100 justify-content-center align-items-center p-2'>
-		<input class='input-largeposition-absolute top-50 start-50' placeholder='Username' id='loginUsername'>
+	<div style='margin-top: 50px' class='p-5 d-flex justify-content-center align-items-center'>
+		<h2>Login<h2>
 	</div>
-	<div class='row h-100 justify-content-center align-items-center p-2'>
-		<input class='p-2' type='submit' value='Submit'>
-		<button id="createNewUser" class='p-2 btn btn-primary'><i class='bi bi-person-plus'></i> New User </button>
+	<div class="input-group mb-3">
+  <input type="text" class="form-control" id="loginUsername" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
 	</div>
-</form>
+	<div class='d-flex justify-content-center align-items-center'>
+		<button id="loginSubmit" class='btn btn-secondary'><i class='bi bi-person'></i> Login </button>
+		<button id="createNewUser" class='btn btn-primary'><i class='bi bi-person-plus'></i> New User </button>
+	</div>

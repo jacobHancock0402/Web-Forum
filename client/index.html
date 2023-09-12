@@ -18,16 +18,21 @@
 
 <body>
     <div class='h-25'>
-  <h1> Basketball Forum </h1>
-  <h2 id="userNameArea"><i class='bi bi-person-fill'></i></h2>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav col-lg-12">
-            <li class="nav-item-active col"><button id="createPost" class='btn btn-primary'><i class='bi bi-plus-circle'></i>   Create a Post</button></li>
-            <li class="nav-item-active col"><button class='btn btn-primary' id="viewPosts"><i class='bi bi-view-list'></i> View Posts</button></li>
-            <li class="nav-item-active col"><button class='btn btn-primary' id="login"><i class='bi bi-box-arrow-right'></i> Login</button></li>
+            <li class="nav-item-active pl-3 pr-3"><h2 id="userNameArea"><i class='bi bi-person-fill'></i></h2></li>
+            <li class="nav-item-active pl-3 pr-3"><a class="nav-link" id="createPost"><i class='bi bi-plus-circle'></i>   Create a Post</a></li>
+            <li class="nav-item-active pl-3 pr-3"><a class="nav-link" id="viewPosts"><i class='bi bi-view-list'></i> View Posts</a></li>
+            <li class="nav-item-active pl-3 pr-3"><a class="nav-link" id="login"><i class='bi bi-box-arrow-right'></i> Login</a></li>
         </ul>
     </nav>
     </div>
-    <div class='h-75' id="mainDiv">
+    <div class='container-fluid h-75'>
+        <div class='row'>
+            <div class='col-sm-2'></div>
+            <div class='col-sm-8' id="mainDiv">
+            </div>
+            <div class='col-sm-2'></div>
+        </div>
     </div>
 </body>

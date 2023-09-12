@@ -6,16 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post Page></title>
 </head>
-
-<form class='p-2 h-75' action='http://127.0.0.1:8090/posts/create' method='POST' id="postCreateForm">
-	<div class='row justify-content-center align-items-center'>
-		<input class='w-50 h-25 p-2' placeholder='Title' id='createPostTitle'>
-	</div>
-	<div class='row justify-content-center align-items-center p-2'>
-		<textarea class="longInput w-50" rows="10" id="createPostBody" placeholder="Body"></textarea>
-	</div>
-	<div class='row justify-content-center align-items-center p-2'>
-		<input type='submit' value='Submit'>
-	</div>
+<div style='margin-top: 30px' class='d-flex justify-content-center align-items-center'>
+	<h2>New Post<h2>
+</div>
+<form class='justify-content-center align-items-center' action='/posts/create' method='POST' id="postCreateForm" enctype='multipart/form-data'>
+		<div class="input-group p-2">
+  			<input id="createPostTitle" placeholder="Title" class="form-control" aria-label="With textarea"></textarea>
+		</div>
+		<div class="input-group p-2">
+  			<textarea id ="createPostBody" placeholder="Body" class="form-control" aria-label="With textarea"></textarea>
+		</div>
+		<div class="input-group p-2">
+		  <div class="input-group-prepend">
+		    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+		  </div>
+		<div class="custom-file p-2">
+		  <input type="file" name="file">
+		  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+		</div>
+		</div>
+		<div class="p-2">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</div>
 </form>
 <!-- <button class='btn btn-success'> Submit</button> -->

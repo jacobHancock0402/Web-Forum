@@ -3,9 +3,10 @@ export default function viewPostsPage () {
     document.getElementById('viewPosts').addEventListener('click', async () => {
         let response = await fetch('http://127.0.0.1:8090/posts/view');
         let unorderedList = document.createElement('ul');
+        unorderedList.style = "padding: 0"
         response = await response.json();
         for (const i in response) {
-            unorderedList.innerHTML += "<li class='border border-primary p-3 w-100 block><div class='row' id='" + i + "'><div><h2 class='font-weight-bold'>" + response[i].title + "</h2><p><i class='bi bi-person-fill'></i> " + response[i].user + "</p></div><button class='col-2 p-2 btn btn-primary' id='getPost" + i + "'>View Post</button> <button class='col-2 p-2 btn btn-success btn-sm' id='like" + i + "'><i class='bi bi-hand-thumbs-up' id='thumbsUp" + i + "'></i></button><button class='col-2 p-2 btn btn-danger btn-sm' id='dislike" + i + "'><i class='bi bi-hand-thumbs-down' id='thumbsDown" + i + "'></i></button> <p class='col-1' id='likeCounter" + i + "'><i class='bi bi-hand-thumbs-up-fill'></i> " + response[i].likes + '</p></div></li>';
+            unorderedList.innerHTML += "<li class='position-relative rounded border bg-light p-3' id='" + i + "'><a class='stretched-link'id='getPost" + i + "'></a><h2 class='font-weight-bold'>" + response[i].title + "</h2><p class='text-muted'><i class='bi bi-person-fill'></i> " + response[i].user + "</p><button style='z-index: 2; position: relative' class=' btn btn-primary d-none d-inline p-2 ' id='like" + i + "'><i class='bi bi-hand-thumbs-up' id='thumbsUp" + i + "'></i></button><p style = 'padding: 0' class = 'p-2 d-inline'id='likeCounter" + i + "'>" + response[i].likes + "</p><button style='z-index: 2; position: relative' class=' btn btn-danger d-none d-inline p-2' id='dislike" + i + "'><i class='bi bi-hand-thumbs-down' id='thumbsDown" + i + "'></i></button></li>";
         }
         mainDiv.innerHTML = unorderedList.outerHTML;
         for (const i in response) {
@@ -32,6 +33,7 @@ export default function viewPostsPage () {
                 const likeButton = document.getElementById('like' + i);
                 const dislikeButton = document.getElementById('dislike' + i);
                 likeButton.addEventListener('click', async (button) => {
+                    button.stopPropagation()
                 const user = document.getElementById('userNameArea').innerHTML;
                 if (user.indexOf('>') + 4 >= user.length - 1) {
                     alert('You must be logged in to like a post');
@@ -69,12 +71,13 @@ export default function viewPostsPage () {
                         headers: { 'Content-Type': 'application/json' }
                 });
                 const likeCounter = document.getElementById('likeCounter' + i);
-                const likes = Number(likeCounter.innerHTML.substr(likeCounter.innerHTML.indexOf('>') + 6)) + 1;
-                likeCounter.innerHTML = "<i class='bi bi-hand-thumbs-up-fill'></i> " + likes;
+                const likes = Number(likeCounter.innerHTML) + 1;
+                likeCounter.innerHTML = likes;
                 }
             }
             });
             dislikeButton.addEventListener('click', async (button) => {
+            button.stopPropagation()
             const user = document.getElementById('userNameArea').innerHTML;
             if (user.indexOf('>') + 4 >= user.length - 1) {
                 alert('You must be logged in to dislike a post');
@@ -113,8 +116,8 @@ export default function viewPostsPage () {
                         headers: { 'Content-Type': 'application/json' }
                     });
                     const likeCounter = document.getElementById('likeCounter' + i);
-                    const likes = Number(likeCounter.innerHTML.substr(likeCounter.innerHTML.indexOf('>') + 6)) - 1;
-                    likeCounter.innerHTML = "<i class='bi bi-hand-thumbs-up-fill'></i> " + likes;
+                    const likes = Number(likeCounter.innerHTML) - 1;
+                    likeCounter.innerHTML = likes;
                     }
             }
             });
@@ -128,7 +131,7 @@ export default function viewPostsPage () {
                 const userName = userStr.substr(userStr.indexOf('>') + 6);
                 let thisPost = await fetch('post?id=' + postId);
                 thisPost = await thisPost.json();
-                mainDiv.innerHTML = "<div class='col-12 p-3 border border-primary rounded'><h2 class='font-weight-bold'>" + thisPost.title + "</h2><p class='font-weight-light'> " + thisPost.body + "</p><p><i class='bi bi-person-fill'></i> " + thisPost.user + "</p><div class='row' id='buttonRow'><p class='col-1' id='likeCounter" + postId + "'><i class='bi bi-hand-thumbs-up-fill'></i> " + thisPost.likes + '</p></div></div></div>';
+                mainDiv.innerHTML = "<div class='rounded border bg-light p-3'><h2 class='font-weight-bold'>" + thisPost.title + "</h2><p class='font-weight-light'> " + thisPost.body + "</p><p><i class='bi bi-person-fill'></i> " + thisPost.user + "</p><div class='row' id='buttonRow'><p class='col-1' id='likeCounter" + postId + "'><i class='bi bi-hand-thumbs-up-fill'></i> " + thisPost.likes + '</p></div></div></div>';
                 const addCommentButton = document.createElement('button');
                 addCommentButton.innerHTML = " <i class='bi bi-pencil-square'></i> Add Comment";
                 addCommentButton.className = 'btn btn-secondary';
@@ -140,21 +143,26 @@ export default function viewPostsPage () {
                     editButton.className = 'btn btn-primary';
                     const deleteButton = document.createElement('button');
                     deleteButton.innerHTML = 'Delete Post';
-                    deleteButton.className = 'btn btn-primary';
+                    deleteButton.className = 'btn btn-danger';
                     mainDiv.firstChild.appendChild(editButton);
                     mainDiv.firstChild.appendChild(deleteButton);
                     deleteButton.addEventListener('click', async () => {
-                    const response = await fetch('http://127.0.0.1:8090/posts/delete',
-                    {
-                        method: 'DELETE',
-                        body: JSON.stringify({ id: postId }),
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    if (response.ok) {
-                        alert('Post Deleted');
-                    }
-                    mainDiv.innerHTML = null;
-                    });
+                        if(confirm('Are you sure you want to delete this post? This cannot be reversed'))
+                        {
+                            const response = await fetch('http://127.0.0.1:8090/posts/delete',
+                            {
+                                method: 'DELETE',
+                                body: JSON.stringify({ id: postId }),
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                            if (response.ok) {
+                                alert('Post Deleted');
+                            }
+                            mainDiv.innerHTML = null;
+                           
+                        }
+                        });
+
                     editButton.addEventListener('click', async () => {
                         let response = await fetch('http://127.0.0.1:8090/posts/create');
                         response = await response.text();
@@ -210,11 +218,23 @@ export default function viewPostsPage () {
 
                 let response = await fetch('http://127.0.0.1:8090/comments?id=' + postId);
                 response = await response.json();
+                
                 unorderedList = document.createElement('ul');
+                unorderedList.style = "padding: 0px;"
+                //unorderedList.classList.add("col-sm-8")
+                unorderedList.classList.add("pr-4")
+                unorderedList.classList.add("pl-4")
+
+            
+                
+            
+          
                 for (const j in response) {
-                    unorderedList.innerHTML += "<li class='border p-2 w-100 block><div class='row' id='" + j + "'><div class='col-5'><p>" + response[j].text + "</p></div> <button class='col-2 p-2 btn btn-success btn-sm' id='" + postId + 'like' + j + "'><i class='bi bi-hand-thumbs-up' id='thumbsUpComment" + j + "''></i></button><button class='col-2 p-2 btn btn-danger btn-sm' id='" + postId + 'dislike' + j + "'><i class='bi bi-hand-thumbs-down' id='thumbsDownComment" + j + "'></i></button> <p class='col-1' id='" + postId + 'likeCounterComment' + j + "'><i class='bi bi-hand-thumbs-up-fill'></i> " + response[j].likes + '</p></div></li>';
+                    unorderedList.innerHTML += "<li class='justify-content-center border rounded p-3'><p>" + response[j].text + "</p> <button class='btn btn-primary d-none d-inline p-2' id='" + postId + 'like' + j + "'><i class='bi bi-hand-thumbs-up' id='thumbsUpComment"+j+"'></i></button><p class='d-inline col-1' id='" + postId + 'likeCounterComment' + j + "'>" + response[j].likes + "</p><button class='btn btn-danger d-none d-inline p-2' id='" + postId + 'dislike' + j + "'><i class='bi bi-hand-thumbs-down' id='thumbsDownComment" + j + "'></i></button> </li>";
                 }
+                
                 mainDiv.appendChild(unorderedList);
+
                 for (const j in response) {
                     const comment = response[j];
                     const userStr = document.getElementById('userNameArea').innerHTML;
@@ -273,8 +293,8 @@ export default function viewPostsPage () {
                                     headers: { 'Content-Type': 'application/json' }
                                 });
                                 const likeCounter = document.getElementById(postId + 'likeCounterComment' + j);
-                                const likes = Number(likeCounter.innerHTML.substr(likeCounter.innerHTML.indexOf('>') + 6)) + 1;
-                                likeCounter.innerHTML = "<i class='bi bi-hand-thumbs-up-fill'></i> " + likes;
+                                const likes = Number(likeCounter.innerHTML) + 1;
+                                likeCounter.innerHTML = likes;
                             }
                         }
                     });
@@ -318,8 +338,8 @@ export default function viewPostsPage () {
                                     headers: { 'Content-Type': 'application/json' }
                                 });
                                 const likeCounter = document.getElementById(postId + 'likeCounterComment' + j);
-                                const likes = Number(likeCounter.innerHTML.substr(likeCounter.innerHTML.indexOf('>') + 6)) - 1;
-                                likeCounter.innerHTML = "<i class='bi bi-hand-thumbs-up-fill'></i> " + likes;
+                                const likes = Number(likeCounter.innerHTML) - 1;
+                                likeCounter.innerHTML = likes;
                             }
                         }
                     });

@@ -23,7 +23,6 @@ loginPage()
 // also getting a few console erros as im trying to add listeners to null posts
 // so next is edit post; just load some inputs, put inside as the body and title of the posts, then have a submit button
 // then also wanna be able to comment, maybe do this just in the view post bit#
-// then the users shit
 // also prob wanna add in photos on the posts(i know input can take in a photo)
 
 // code for posting a post

@@ -1,12 +1,29 @@
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const app = express();
+const multer = require('multer')
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 app.use(express.static('client'));
 app.use(bodyParser.json());
-
-const users = [{ username: 'ExampleUser' }];
-const posts = [{ title: 'WOW! Look at this example!', body: 'Did you know this website is really good? Like really good, seriously. Do you concur?', id: '0', likes: 0, comments: [{ text: "Yes, I concur this website is amazing! You can post, comment on your post and even like posts. I've never seen a website so good", likes: 0, likedBy: [], dislikedBy: [] }], user: 'ExampleUser', likedBy: [], dislikedBy: [] }];
+app.use('/images', express.static(__dirname + '/images'))
+app.use(fileUpload());
+const defaultUsers = [{ username: 'ExampleUser' }];
+const defaultPost = [{ title: 'WOW! Look at this example!', body: 'Did you know this website is really good? Like really good, seriously. Do you concur?', "image": "C:/Users/hanco/Documents/'Basketball and School'/'Attractive Photo'", id: '0', likes: 0, comments: [{ text: "Yes, I concur this website is amazing! You can post, comment on your post and even like posts. I've never seen a website so good", likes: 0, likedBy: [], dislikedBy: [] }], user: 'ExampleUser', likedBy: [], dislikedBy: [] }];
+users = fs.readFileSync('./data/users.json', 'utf-8');
+users = JSON.parse(users);
+posts = fs.readFileSync('./data/posts.json', 'utf-8');
+posts = JSON.parse(posts);
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({ dest: "images" });
 app.get('/', function (req, resp) {
     resp.status(200).sendFile(path.join(__dirname, '/client/index.html'));
 });
@@ -14,7 +31,20 @@ app.get('/posts/create', function (req, resp) {
     resp.sendFile(path.join(__dirname, '/client/createPost.html'));
 });
 app.post('/posts/create', function (req, resp) {
-    posts.push({ title: req.body.title, body: req.body.body, id: posts.length, likes: 0, comments: [], user: req.body.user, likedBy: [], dislikedBy: [] });
+    posts.push({ title: req.body.title, body: req.body.body, image:req.body.imagePath, id: posts.length, likes: 0, comments: [], user: req.body.user, likedBy: [], dislikedBy: [] });
+    if (!req.files) {
+        console.log("yesssir")
+        return resp.status(400).send("No files were uploaded.");
+    }
+    file = req.files.file;
+    uploadPath = __dirname + '/images/' + file.name;
+    file.mv(uploadPath, function(err) {
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded!');
+    });
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.sendStatus(200);
     resp.redirect('/');
 });
@@ -41,6 +71,7 @@ app.delete('/posts/delete', function (req, resp) {
         resp.sendStatus(400);
     }
     posts.splice(req.body.id, 1);
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.sendStatus(200);
 });
 
@@ -50,6 +81,7 @@ app.put('/posts/edit', function (req, resp) {
     }
     posts[req.body.id].title = req.body.title;
     posts[req.body.id].body = req.body.body;
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.sendStatus(200);
 });
 app.put('/posts/like', function (req, resp) {
@@ -62,6 +94,7 @@ app.put('/posts/like', function (req, resp) {
     } else {
         posts[req.body.id].dislikedBy.push(req.body.user);
     }
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.send('Request Succesful');
     });
 app.get('/post', function (req, resp) {
@@ -86,6 +119,7 @@ app.put('/comments/like', function (req, resp) {
     } else {
         posts[req.body.postId].comments[req.body.commentId].dislikedBy.push(req.body.user);
     }
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.sendStatus(200);
 });
 app.get('/comments/create', function (req, resp) {
@@ -96,6 +130,7 @@ app.post('/comments/create', function (req, resp) {
         resp.send('Request Failed. Invalid ID');
     }
     posts[req.body.id].comments.push({ text: req.body.body, likes: 0, likedBy: [], dislikedBy: [] });
+    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
     resp.sendStatus(200);
 });
 app.get('/comment', function (req, resp) {
@@ -120,7 +155,14 @@ app.get('/login', function (req, resp) {
     resp.sendStatus(400);
 });
 app.post('/users/create', function (req, resp) {
+    // User already created with that username, return 400
+    for (const i in users) {
+        if (users[i].username === req.body.username) {
+                resp.sendStatus(400);
+        }
+    }
     users.push({ username: req.body.username });
+    fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
     resp.sendStatus(200);
 });
 
