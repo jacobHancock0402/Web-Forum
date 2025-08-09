@@ -1,6 +1,6 @@
-# Web Forum - Basketball Discussion Platform
+# Web Forum
 
-A full-stack web application built with Node.js, Express.js, and vanilla JavaScript that allows users to create, view, like/dislike, and comment on basketball forum posts with image upload support.
+A full-stack web application built with Node.js, Express.js, and vanilla JavaScript that allows users to create, view, like/dislike, and comment on posts with image upload support.
 
 ## Features
 
