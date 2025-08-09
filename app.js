@@ -31,22 +31,49 @@ app.get('/posts/create', function (req, resp) {
     resp.sendFile(path.join(__dirname, '/client/createPost.html'));
 });
 app.post('/posts/create', function (req, resp) {
-    posts.push({ title: req.body.title, body: req.body.body, image:req.body.imagePath, id: posts.length, likes: 0, comments: [], user: req.body.user, likedBy: [], dislikedBy: [] });
-    if (!req.files) {
-        console.log("yesssir")
-        return resp.status(400).send("No files were uploaded.");
+    // Check if required fields are present
+    if (!req.body.title || !req.body.body || !req.body.user) {
+        return resp.status(400).send("Missing required fields: title, body, or user");
     }
-    file = req.files.file;
-    uploadPath = __dirname + '/images/' + file.name;
-    file.mv(uploadPath, function(err) {
-    if (err)
-      return res.status(500).send(err);
-
-    res.send('File uploaded!');
-    });
-    fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
-    resp.sendStatus(200);
-    resp.redirect('/');
+    
+    let imagePath = null;
+    
+    // Handle file upload if present
+    if (req.files && req.files.file) {
+        const file = req.files.file;
+        const uploadPath = __dirname + '/images/' + file.name;
+        
+        file.mv(uploadPath, function(err) {
+            if (err) {
+                console.error('File upload error:', err);
+                return resp.status(500).send("File upload failed");
+            }
+            
+            // File uploaded successfully, now create the post
+            imagePath = '/images/' + file.name;
+            createPost();
+        });
+    } else {
+        // No file uploaded, create post without image
+        createPost();
+    }
+    
+    function createPost() {
+        posts.push({ 
+            title: req.body.title, 
+            body: req.body.body, 
+            image: imagePath, 
+            id: posts.length, 
+            likes: 0, 
+            comments: [], 
+            user: req.body.user, 
+            likedBy: [], 
+            dislikedBy: [] 
+        });
+        
+        fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
+        resp.status(200).json({ message: 'Post created successfully', id: posts.length - 1 });
+    }
 });
 app.get('/posts/view', function (req, resp) {
     let swap = true;
@@ -68,7 +95,7 @@ app.get('/posts/view', function (req, resp) {
 
 app.delete('/posts/delete', function (req, resp) {
     if (!posts[req.body.id]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     posts.splice(req.body.id, 1);
     fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
@@ -77,7 +104,7 @@ app.delete('/posts/delete', function (req, resp) {
 
 app.put('/posts/edit', function (req, resp) {
     if (!posts[req.body.id]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     posts[req.body.id].title = req.body.title;
     posts[req.body.id].body = req.body.body;
@@ -86,7 +113,7 @@ app.put('/posts/edit', function (req, resp) {
 });
 app.put('/posts/like', function (req, resp) {
     if (!posts[req.body.id]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     posts[req.body.id].likes += req.body.value;
     if (req.body.value === 1) {
@@ -99,19 +126,19 @@ app.put('/posts/like', function (req, resp) {
     });
 app.get('/post', function (req, resp) {
     if (!posts[req.query.id]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     resp.json(posts[req.query.id]);
 });
 app.get('/comments', function (req, resp) {
     if (!posts[req.query.id]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     resp.json(posts[req.query.id].comments);
 });
 app.put('/comments/like', function (req, resp) {
     if (!posts[req.body.id]) {
-        resp.send('Request Failed. Invalid ID');
+        return resp.send('Request Failed. Invalid ID');
     }
     posts[req.body.postId].comments[req.body.commentId].likes += req.body.value;
     if (req.body.value === 1) {
@@ -127,7 +154,7 @@ app.get('/comments/create', function (req, resp) {
 });
 app.post('/comments/create', function (req, resp) {
     if (!posts[req.body.id]) {
-        resp.send('Request Failed. Invalid ID');
+        return resp.send('Request Failed. Invalid ID');
     }
     posts[req.body.id].comments.push({ text: req.body.body, likes: 0, likedBy: [], dislikedBy: [] });
     fs.writeFileSync('./data/posts.json', JSON.stringify(posts, null, 2));
@@ -135,10 +162,10 @@ app.post('/comments/create', function (req, resp) {
 });
 app.get('/comment', function (req, resp) {
     if (!posts[req.query.postId]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     if (!posts[req.query.postId].comments[req.query.commentId]) {
-        resp.sendStatus(400);
+        return resp.sendStatus(400);
     }
     resp.setHeader('Content-Type', 'application/json');
     resp.json(posts[req.query.postId].comments[req.query.commentId]);
@@ -149,7 +176,7 @@ app.get('/loginPage', function (req, resp) {
 app.get('/login', function (req, resp) {
     for (const i in users) {
         if (users[i].username === req.query.username) {
-            resp.sendStatus(200);
+            return resp.sendStatus(200);
         }
     }
     resp.sendStatus(400);
@@ -158,7 +185,7 @@ app.post('/users/create', function (req, resp) {
     // User already created with that username, return 400
     for (const i in users) {
         if (users[i].username === req.body.username) {
-                resp.sendStatus(400);
+                return resp.sendStatus(400);
         }
     }
     users.push({ username: req.body.username });

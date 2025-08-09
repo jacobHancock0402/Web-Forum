@@ -2,9 +2,9 @@
   {
     "title": "WOW! Look at this example!",
     "body": "Did you know this website is really good? Like really good, seriously. Do you concur?",
-    "image": "C:/Users/hanco/Documents/'Basketball and School'/'Attractive Photo'",
+    "image": "/images/Example_Image.jpeg",
     "id": "0",
-    "likes": 0,
+    "likes": 1,
     "comments": [
       {
         "text": "Yes, I concur this website is amazing! You can post, comment on your post and even like posts. I've never seen a website so good",
@@ -14,7 +14,9 @@
       }
     ],
     "user": "ExampleUser",
-    "likedBy": [],
+    "likedBy": [
+      "Login fr"
+    ],
     "dislikedBy": []
   }
 ]
