@@ -1,0 +1,20 @@
+[
+  {
+    "title": "WOW! Look at this example!",
+    "body": "Did you know this website is really good? Like really good, seriously. Do you concur?",
+    "image": "C:/Users/hanco/Documents/'Basketball and School'/'Attractive Photo'",
+    "id": "0",
+    "likes": 0,
+    "comments": [
+      {
+        "text": "Yes, I concur this website is amazing! You can post, comment on your post and even like posts. I've never seen a website so good",
+        "likes": 0,
+        "likedBy": [],
+        "dislikedBy": []
+      }
+    ],
+    "user": "ExampleUser",
+    "likedBy": [],
+    "dislikedBy": []
+  }
+]

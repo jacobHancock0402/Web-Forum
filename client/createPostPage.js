@@ -1,6 +1,6 @@
 export default function createPostPage () {
     createPost.addEventListener('click', async (th) => {
-        let response = await fetch('http://127.0.0.1:8090/posts/create');
+        let response = await fetch('/posts/create');
         response = await response.text();
         mainDiv.innerHTML = response;
         document.getElementById('postCreateForm').addEventListener('submit', async (event, form) => {

@@ -1,7 +1,7 @@
 
 export default function viewPostsPage () {
     document.getElementById('viewPosts').addEventListener('click', async () => {
-        let response = await fetch('http://127.0.0.1:8090/posts/view');
+        let response = await fetch('/posts/view');
         let unorderedList = document.createElement('ul');
         unorderedList.style = "padding: 0"
         response = await response.json();
@@ -10,7 +10,7 @@ export default function viewPostsPage () {
         }
         mainDiv.innerHTML = unorderedList.outerHTML;
         for (const i in response) {
-            let post = await fetch('http://127.0.0.1:8090/post?id=' + i);
+            let post = await fetch('/post?id=' + i);
             post = await post.json();
             const userStr = document.getElementById('userNameArea').innerHTML;
             const user = userStr.substr(userStr.indexOf('>') + 6);
@@ -38,7 +38,7 @@ export default function viewPostsPage () {
                 if (user.indexOf('>') + 4 >= user.length - 1) {
                     alert('You must be logged in to like a post');
                 } else {
-                let likeCheck = await fetch('http://127.0.0.1:8090/post?id=' + i);
+                let likeCheck = await fetch('/post?id=' + i);
                 likeCheck = await likeCheck.json();
                 const userStr = document.getElementById('userNameArea').innerHTML;
                 const userName = userStr.substr(userStr.indexOf('>') + 6);
@@ -59,7 +59,7 @@ export default function viewPostsPage () {
                 }
                 if (!cantLike) {
                     document.getElementById('thumbsUp' + i).className += '-fill';
-                    fetch('http://127.0.0.1:8090/posts/like',
+                    fetch('/posts/like',
                     {
                         method: 'PUT',
                         body: JSON.stringify(
@@ -82,7 +82,7 @@ export default function viewPostsPage () {
             if (user.indexOf('>') + 4 >= user.length - 1) {
                 alert('You must be logged in to dislike a post');
             } else {
-                let likeCheck = await fetch('http://127.0.0.1:8090/post?id=' + i);
+                let likeCheck = await fetch('/post?id=' + i);
                 likeCheck = await likeCheck.json();
                 const userStr = document.getElementById('userNameArea').innerHTML;
                 const userName = userStr.substr(userStr.indexOf('>') + 6);
@@ -105,7 +105,7 @@ export default function viewPostsPage () {
                     const userStr = document.getElementById('userNameArea').innerHTML;
                     const userName = userStr.substr(userStr.indexOf('>') + 6);
                     document.getElementById('thumbsDown' + i).className += '-fill';
-                    fetch('http://127.0.0.1:8090/posts/like',
+                    fetch('/posts/like',
                     {
                         method: 'PUT',
                         body: JSON.stringify({
@@ -149,7 +149,7 @@ export default function viewPostsPage () {
                     deleteButton.addEventListener('click', async () => {
                         if(confirm('Are you sure you want to delete this post? This cannot be reversed'))
                         {
-                            const response = await fetch('http://127.0.0.1:8090/posts/delete',
+                            const response = await fetch('/posts/delete',
                             {
                                 method: 'DELETE',
                                 body: JSON.stringify({ id: postId }),
@@ -164,14 +164,14 @@ export default function viewPostsPage () {
                         });
 
                     editButton.addEventListener('click', async () => {
-                        let response = await fetch('http://127.0.0.1:8090/posts/create');
+                        let response = await fetch('/posts/create');
                         response = await response.text();
                         mainDiv.innerHTML = response;
                         const title = document.getElementById('createPostTitle');
                         const body = document.getElementById('createPostBody');
                         document.getElementById('postCreateForm').addEventListener('submit', async (event, form) => {
                             event.preventDefault();
-                            const resp = await fetch('http://127.0.0.1:8090/posts/edit',
+                            const resp = await fetch('/posts/edit',
                             {
                                 method: 'PUT',
                                 body: JSON.stringify(
@@ -189,7 +189,7 @@ export default function viewPostsPage () {
                     });
                 }
                 addCommentButton.addEventListener('click', async () => {
-                    let response = await fetch('http://127.0.0.1:8090/comments/create');
+                    let response = await fetch('/comments/create');
                     response = await response.text();
                     mainDiv.innerHTML = response;
                     document.getElementById('commentCreateForm').addEventListener('submit', async (event, form) => {
@@ -216,7 +216,7 @@ export default function viewPostsPage () {
                     });
                 });
 
-                let response = await fetch('http://127.0.0.1:8090/comments?id=' + postId);
+                let response = await fetch('/comments?id=' + postId);
                 response = await response.json();
                 
                 unorderedList = document.createElement('ul');
@@ -258,7 +258,7 @@ export default function viewPostsPage () {
                         if (user.indexOf('>') + 4 >= user.length - 1) {
                             alert('You must be logged in to like a comment');
                         } else {
-                            let likeCheck = await fetch('http://127.0.0.1:8090/post?id=' + postId);
+                            let likeCheck = await fetch('/post?id=' + postId);
                             likeCheck = await likeCheck.json();
                             likeCheck = likeCheck.comments[j];
                             let cantLike = false;
@@ -280,7 +280,7 @@ export default function viewPostsPage () {
                             }
                             if (!cantLike) {
                                 document.getElementById('thumbsUpComment' + j).className += '-fill';
-                                fetch('http://127.0.0.1:8090/comments/like',
+                                fetch('/comments/like',
                                 {
                                     method: 'PUT',
                                     body: JSON.stringify(
@@ -303,7 +303,7 @@ export default function viewPostsPage () {
                         if (user.indexOf('>') + 4 >= user.length - 1) {
                             alert('You must be logged in to dislike a comment');
                         } else {
-                            let likeCheck = await fetch('http://127.0.0.1:8090/post?id=' + postId);
+                            let likeCheck = await fetch('/post?id=' + postId);
                             likeCheck = await likeCheck.json();
                             likeCheck = likeCheck.comments[j];
                             let cantLike = false;
@@ -325,7 +325,7 @@ export default function viewPostsPage () {
                             }
                             if (!cantLike) {
                                 document.getElementById('thumbsDownComment' + j).className += '-fill';
-                                fetch('http://127.0.0.1:8090/comments/like',
+                                fetch('/comments/like',
                                 {
                                     method: 'PUT',
                                     body: JSON.stringify(
