@@ -2,6 +2,8 @@
 
 A full-stack web application built with Node.js, Express.js, and vanilla JavaScript that allows users to create, view, like/dislike, and comment on posts with image upload support.
 
+This project is not currently publicly hosted. You have to follow the instructions below in order to view it.
+
 ## Features
 
 - **User Authentication**: Simple username-based login system
