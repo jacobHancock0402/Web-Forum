@@ -83,24 +83,7 @@ Web-Forum/
 
 ## API Endpoints
 
-### Posts
-- `GET /posts/view` - Get all posts
-- `GET /post?id={id}` - Get specific post
-- `POST /posts/create` - Create new post (supports file uploads)
-- `PUT /posts/edit` - Edit existing post
-- `DELETE /posts/delete` - Delete post
-- `PUT /posts/like` - Like/dislike post
-
-### Comments
-- `GET /comments?id={postId}` - Get comments for a post
-- `GET /comments/create` - Get comment creation form
-- `POST /comments/create` - Create new comment
-- `PUT /comments/like` - Like/dislike comment
-
-### Authentication
-- `GET /loginPage` - Get login page
-- `GET /login?username={username}` - Authenticate user
-- `POST /users/create` - Create new user account
+Postman documentation for the API endpoints can be found [here](https://www.postman.com/hancockjacob083/web-forum/collection/7e5y91g/web-forum?action=share&source=copy-link&creator=25497046)
 
 ## Usage
 
